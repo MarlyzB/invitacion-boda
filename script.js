@@ -533,10 +533,10 @@ const revealObserver =
         },
 
         {
-            threshold: 0.12,
+            threshold: 0.05,
 
             rootMargin:
-                "0px 0px -40px 0px"
+                "0px 0px 100px 0px"
         }
 
     );
@@ -547,7 +547,8 @@ revealElements.forEach(element => {
     revealObserver.observe(element);
 
 });
-  =====
+ /* =======
+ 5. ITINERARIO
    Cada momento aparece individualmente
    ========================================================= */
 
