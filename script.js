@@ -547,7 +547,7 @@ revealElements.forEach(element => {
     revealObserver.observe(element);
 
 });
-   5. ITINERARIO
+  =====
    Cada momento aparece individualmente
    ========================================================= */
 
