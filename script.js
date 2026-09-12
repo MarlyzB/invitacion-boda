@@ -1230,10 +1230,19 @@ function launchWeddingConfetti() {
            diferente.
         */
 
-        const speed =
-            450 +
-            Math.random() * 650;
+        /* Fuerza adaptada al tamaño de pantalla */
 
+const screenScale =
+    Math.max(
+        1,
+        window.innerWidth / 700
+    );
+
+const speed =
+    (
+        500 +
+        Math.random() * 750
+    ) * screenScale;
 
         const velocityX =
             Math.cos(angle) *
