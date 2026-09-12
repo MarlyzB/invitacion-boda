@@ -1182,12 +1182,14 @@ function launchWeddingConfetti() {
            central/inferior de la pantalla.
         */
 
-        const startX =
-            window.innerWidth *
-            (
-                0.35 +
-                Math.random() * 0.30
-            );
+       /* El confeti no nace exactamente del mismo punto */
+
+const startX =
+    window.innerWidth *
+    (
+        0.42 +
+        Math.random() * 0.16
+    );
 
 
         const startY =
