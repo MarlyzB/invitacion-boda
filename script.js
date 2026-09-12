@@ -1107,6 +1107,7 @@ window.addEventListener(
 );
 /* =========================================================
    CONFETI - EXPLOSIÓN REALISTA
+   ADAPTADO PARA CELULAR Y COMPUTADOR
 ========================================================= */
 
 const countdownConfettiSection =
@@ -1119,12 +1120,12 @@ let confettiPlayed = false;
 
 
 const confettiColors = [
-    "#b8945f", // dorado
-    "#d8b7ad", // rosa
-    "#a7ad94", // salvia
-    "#ead8c8", // beige
-    "#c9a86a", // dorado claro
-    "#ffffff"  // blanco
+    "#b8945f",
+    "#d8b7ad",
+    "#a7ad94",
+    "#ead8c8",
+    "#c9a86a",
+    "#ffffff"
 ];
 
 
@@ -1133,37 +1134,64 @@ function launchWeddingConfetti() {
     if (!confettiContainer) return;
 
 
-    const totalPieces = 150;
+    const isMobile =
+        window.innerWidth <= 700;
+
+
+    const totalPieces =
+        isMobile ? 130 : 190;
+
 
     const pieces = [];
 
 
-    for (let i = 0; i < totalPieces; i++) {
+    /* =====================================================
+       PUNTOS DE EXPLOSIÓN
+    ===================================================== */
+
+    const explosionPoints =
+        isMobile
+            ? [0.50]
+            : [0.28, 0.50, 0.72];
+
+
+    for (
+        let i = 0;
+        i < totalPieces;
+        i++
+    ) {
 
         const element =
             document.createElement("span");
+
 
         element.className =
             "confetti-piece";
 
 
-        /* Diferentes formas */
+        /* FORMAS */
 
         const shapeRandom =
             Math.random();
 
+
         if (shapeRandom < 0.18) {
 
-            element.classList.add("circle");
+            element.classList.add(
+                "circle"
+            );
 
-        } else if (shapeRandom < 0.38) {
+        }
+        else if (shapeRandom < 0.38) {
 
-            element.classList.add("thin");
+            element.classList.add(
+                "thin"
+            );
 
         }
 
 
-        /* Color */
+        /* COLOR */
 
         element.style.backgroundColor =
             confettiColors[
@@ -1174,34 +1202,38 @@ function launchWeddingConfetti() {
             ];
 
 
-        /*
-           Punto de explosión.
+        /* =================================================
+           PUNTO DE SALIDA
+        ================================================= */
 
-           No salen exactamente del mismo lugar.
-           Se distribuyen alrededor de la zona
-           central/inferior de la pantalla.
-        */
+        const explosionPoint =
+            explosionPoints[
+                Math.floor(
+                    Math.random() *
+                    explosionPoints.length
+                )
+            ];
 
-       /* El confeti no nace exactamente del mismo punto */
 
-const startX =
-    window.innerWidth *
-    (
-        0.42 +
-        Math.random() * 0.16
-    );
+        const startX =
+            window.innerWidth *
+            explosionPoint +
+            (
+                Math.random() * 50 - 25
+            );
 
 
         const startY =
             window.innerHeight *
             (
-                0.60 +
-                Math.random() * 0.12
+                0.68 +
+                Math.random() * 0.08
             );
 
 
         element.style.left =
             startX + "px";
+
 
         element.style.top =
             startY + "px";
@@ -1212,39 +1244,50 @@ const startX =
         );
 
 
-        /*
-           Ángulo de lanzamiento.
+        /* =================================================
+           DIRECCIÓN
+        ================================================= */
 
-           Algunas piezas van a la izquierda,
-           otras al centro y otras a la derecha.
+        /*
+           -165° hasta -15°.
+
+           Esto crea un abanico completo:
+           izquierda, arriba y derecha.
         */
 
         const angle =
             (
-                -155 +
-                Math.random() * 130
+                -165 +
+                Math.random() * 150
             ) *
             Math.PI / 180;
 
 
+        /* =================================================
+           FUERZA DE LA EXPLOSIÓN
+        ================================================= */
+
         /*
-           Cada pieza tiene una velocidad
-           diferente.
+           En computador la fuerza aumenta
+           proporcionalmente al ancho.
         */
 
-        /* Fuerza adaptada al tamaño de pantalla */
+        const screenScale =
+            isMobile
+                ? 1
+                : Math.min(
+                    1.8,
+                    window.innerWidth / 900
+                );
 
-const screenScale =
-    Math.max(
-        1,
-        window.innerWidth / 700
-    );
 
-const speed =
-    (
-        500 +
-        Math.random() * 750
-    ) * screenScale;
+        const speed =
+            (
+                520 +
+                Math.random() * 720
+            ) *
+            screenScale;
+
 
         const velocityX =
             Math.cos(angle) *
@@ -1255,6 +1298,10 @@ const speed =
             Math.sin(angle) *
             speed;
 
+
+        /* =================================================
+           DATOS INDIVIDUALES DE CADA PAPELITO
+        ================================================= */
 
         pieces.push({
 
@@ -1272,32 +1319,42 @@ const speed =
                 Math.random() * 360,
 
             rotationSpeed:
-                (
-                    Math.random() * 900 -
-                    450
-                ),
+                Math.random() * 1000 - 500,
+
+            /* GRAVEDAD */
 
             gravity:
-                750 +
-                Math.random() * 350,
+                620 +
+                Math.random() * 520,
+
+            /* RESISTENCIA DEL AIRE */
 
             drag:
-                0.985 +
-                Math.random() * 0.01,
+                0.982 +
+                Math.random() * 0.012,
+
+            /* NO SALEN TODOS AL MISMO TIEMPO */
 
             delay:
-                Math.random() * 350,
+                Math.random() * 450,
 
             startTime: null,
 
             life:
-                3200 +
-                Math.random() * 1800
+                3500 +
+                Math.random() * 1800,
+
+            flutterOffset:
+                Math.random() * Math.PI * 2
 
         });
 
     }
 
+
+    /* =====================================================
+       ANIMACIÓN
+    ===================================================== */
 
     const animationStart =
         performance.now();
@@ -1316,11 +1373,7 @@ const speed =
                 piece.delay;
 
 
-            /*
-               Todavía no ha salido esta pieza.
-               Esto evita que todo explote
-               exactamente al mismo tiempo.
-            */
+            /* AÚN NO SALE */
 
             if (elapsed < 0) {
 
@@ -1330,6 +1383,8 @@ const speed =
 
             }
 
+
+            /* PRIMER FRAME */
 
             if (piece.startTime === null) {
 
@@ -1343,8 +1398,8 @@ const speed =
 
             const dt =
                 Math.min(
-                    (now - piece.startTime) /
-                    1000,
+                    (now - piece.startTime)
+                    / 1000,
                     0.035
                 );
 
@@ -1352,102 +1407,109 @@ const speed =
             piece.startTime = now;
 
 
-            /*
-               Resistencia del aire
-            */
+            /* RESISTENCIA */
 
-            piece.vx *= piece.drag;
+            piece.vx *=
+                Math.pow(
+                    piece.drag,
+                    dt * 60
+                );
 
 
-            /*
-               Gravedad
-            */
+            /* GRAVEDAD */
 
             piece.vy +=
                 piece.gravity * dt;
 
 
-            /*
-               Posición
-            */
+            /* MOVIMIENTO */
 
             piece.x +=
                 piece.vx * dt;
+
 
             piece.y +=
                 piece.vy * dt;
 
 
-            /*
-               Rotación independiente
-            */
+            /* ROTACIÓN */
 
             piece.rotation +=
                 piece.rotationSpeed *
                 dt;
 
 
-            /*
-               Pequeño movimiento lateral
-               para que no parezca mecánico.
-            */
+            /* MOVIMIENTO IRREGULAR */
 
             const flutter =
                 Math.sin(
-                    elapsed * 0.012 +
-                    piece.rotation
-                ) * 5;
-
-
-            piece.element.style.transform =
-                `translate3d(${flutter}px, 0, 0)
-                 rotate(${piece.rotation}deg)`;
+                    elapsed * 0.01 +
+                    piece.flutterOffset
+                ) * 7;
 
 
             piece.element.style.left =
-                piece.x + "px";
+                (
+                    piece.x +
+                    flutter
+                ) + "px";
+
 
             piece.element.style.top =
                 piece.y + "px";
 
 
-            /*
-               Desaparece progresivamente
-               al final.
-            */
+            piece.element.style.transform =
+                `
+                rotate(${piece.rotation}deg)
+                scaleX(
+                    ${0.55 +
+                    Math.abs(
+                        Math.sin(
+                            elapsed * 0.008
+                        )
+                    ) * 0.45}
+                )
+                `;
+
+
+            /* =================================================
+               DESAPARECER POCO A POCO
+            ================================================= */
 
             const progress =
                 elapsed /
                 piece.life;
 
 
-            if (progress > 0.72) {
+            if (progress > 0.75) {
 
                 piece.element.style.opacity =
                     Math.max(
                         0,
                         1 -
                         (
-                            progress - 0.72
-                        ) / 0.28
+                            progress - 0.75
+                        ) / 0.25
                     );
 
             }
 
 
-            /*
-               Eliminar cuando termina
-            */
+            /* =================================================
+               ¿SIGUE VIVA?
+            ================================================= */
 
             if (
                 elapsed < piece.life &&
                 piece.y <
-                    window.innerHeight + 100
+                window.innerHeight + 120
             ) {
 
                 piecesAlive = true;
 
-            } else {
+            }
+            else {
 
                 piece.element.remove();
 
@@ -1474,6 +1536,57 @@ const speed =
 }
 
 
+
+/* =========================================================
+   ACTIVAR CUANDO LLEGA A CUENTA REGRESIVA
+========================================================= */
+
+if (
+    countdownConfettiSection &&
+    confettiContainer
+) {
+
+    const countdownConfettiObserver =
+        new IntersectionObserver(
+
+            entries => {
+
+                entries.forEach(entry => {
+
+                    if (
+                        entry.isIntersecting &&
+                        !confettiPlayed
+                    ) {
+
+                        confettiPlayed = true;
+
+
+                        launchWeddingConfetti();
+
+
+                        countdownConfettiObserver
+                            .unobserve(
+                                countdownConfettiSection
+                            );
+
+                    }
+
+                });
+
+            },
+
+            {
+                threshold: 0.20
+            }
+
+        );
+
+
+    countdownConfettiObserver.observe(
+        countdownConfettiSection
+    );
+
+}
 
 /* =========================================================
    ACTIVAR AL LLEGAR A CUENTA REGRESIVA
