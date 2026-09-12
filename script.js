@@ -1105,3 +1105,207 @@ window.addEventListener(
 
     }
 );
+/* =========================================================
+   CONFETI AL LLEGAR A LA CUENTA REGRESIVA
+========================================================= */
+
+const countdownSection =
+    document.querySelector(".countdown-section");
+
+const confettiContainer =
+    document.getElementById("confetti-container");
+
+let confettiHasPlayed = false;
+
+
+/* Colores de la invitación */
+
+const confettiColors = [
+    "#b8945f", // dorado
+    "#d8b7ad", // rosa suave
+    "#a7ad94", // verde salvia
+    "#efe1d5", // beige
+    "#c9a86a", // dorado claro
+    "#ffffff"  // blanco
+];
+
+
+function createWeddingConfetti() {
+
+    if (!confettiContainer) return;
+
+
+    const numberOfPieces = 100;
+
+
+    for (
+        let i = 0;
+        i < numberOfPieces;
+        i++
+    ) {
+
+        const piece =
+            document.createElement("span");
+
+
+        piece.classList.add(
+            "confetti-piece"
+        );
+
+
+        /* Algunas piezas redondas */
+
+        if (i % 5 === 0) {
+
+            piece.classList.add(
+                "circle"
+            );
+
+        }
+
+
+        /* Algunas piezas más delgadas */
+
+        if (i % 7 === 0) {
+
+            piece.classList.add(
+                "thin"
+            );
+
+        }
+
+
+        /* Posición horizontal */
+
+        piece.style.left =
+            Math.random() * 100 + "%";
+
+
+        /* Color */
+
+        piece.style.backgroundColor =
+            confettiColors[
+                Math.floor(
+                    Math.random() *
+                    confettiColors.length
+                )
+            ];
+
+
+        /* Movimiento lateral */
+
+        const drift =
+            (Math.random() * 240) - 120;
+
+
+        piece.style.setProperty(
+            "--drift",
+            drift + "px"
+        );
+
+
+        /* Rotación */
+
+        const rotation =
+            (Math.random() * 900) + 360;
+
+
+        piece.style.setProperty(
+            "--rotation",
+            rotation + "deg"
+        );
+
+
+        /* Duración */
+
+        const duration =
+            2.8 + Math.random() * 2.2;
+
+
+        piece.style.setProperty(
+            "--fall-duration",
+            duration + "s"
+        );
+
+
+        /* Pequeño retraso para crear explosión */
+
+        const delay =
+            Math.random() * 0.7;
+
+
+        piece.style.setProperty(
+            "--fall-delay",
+            delay + "s"
+        );
+
+
+        confettiContainer.appendChild(
+            piece
+        );
+
+
+        /* Limpiar después de la animación */
+
+        setTimeout(
+            () => {
+
+                piece.remove();
+
+            },
+
+            (duration + delay + 1) * 1000
+        );
+
+    }
+
+}
+
+
+/* Detectar cuándo aparece la cuenta regresiva */
+
+if (
+    countdownSection &&
+    confettiContainer
+) {
+
+    const confettiObserver =
+        new IntersectionObserver(
+
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting &&
+                            !confettiHasPlayed
+                        ) {
+
+                            confettiHasPlayed = true;
+
+                            createWeddingConfetti();
+
+                            confettiObserver.unobserve(
+                                countdownSection
+                            );
+
+                        }
+
+                    }
+                );
+
+            },
+
+            {
+                threshold: 0.35
+            }
+
+        );
+
+
+    confettiObserver.observe(
+        countdownSection
+    );
+
+}
