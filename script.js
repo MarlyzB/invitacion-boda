@@ -1106,7 +1106,7 @@ window.addEventListener(
     }
 );
 /* =========================================================
-   CONFETI - CUENTA REGRESIVA
+   CONFETI - EXPLOSIÓN REALISTA
 ========================================================= */
 
 const countdownConfettiSection =
@@ -1118,91 +1118,360 @@ const confettiContainer =
 let confettiPlayed = false;
 
 
-function launchConfetti() {
-
-    if (!confettiContainer) {
-        return;
-    }
-
-
-    const colors = [
-        "#b8945f",
-        "#d8b7ad",
-        "#a7ad94",
-        "#ead8c8",
-        "#c9a86a",
-        "#ffffff"
-    ];
+const confettiColors = [
+    "#b8945f", // dorado
+    "#d8b7ad", // rosa
+    "#a7ad94", // salvia
+    "#ead8c8", // beige
+    "#c9a86a", // dorado claro
+    "#ffffff"  // blanco
+];
 
 
-    for (let i = 0; i < 140; i++) {
+function launchWeddingConfetti() {
 
-        const confetti =
+    if (!confettiContainer) return;
+
+
+    const totalPieces = 150;
+
+    const pieces = [];
+
+
+    for (let i = 0; i < totalPieces; i++) {
+
+        const element =
             document.createElement("span");
 
-
-        confetti.classList.add(
-            "confetti-piece"
-        );
+        element.className =
+            "confetti-piece";
 
 
-        if (Math.random() > 0.75) {
-            confetti.classList.add("circle");
+        /* Diferentes formas */
+
+        const shapeRandom =
+            Math.random();
+
+        if (shapeRandom < 0.18) {
+
+            element.classList.add("circle");
+
+        } else if (shapeRandom < 0.38) {
+
+            element.classList.add("thin");
+
         }
 
 
-        confetti.style.left =
-            Math.random() * 100 + "vw";
+        /* Color */
 
-
-        confetti.style.backgroundColor =
-            colors[
+        element.style.backgroundColor =
+            confettiColors[
                 Math.floor(
                     Math.random() *
-                    colors.length
+                    confettiColors.length
                 )
             ];
 
 
-        confetti.style.setProperty(
-            "--drift",
-            (Math.random() * 300 - 150) + "px"
-        );
+        /*
+           Punto de explosión.
+
+           No salen exactamente del mismo lugar.
+           Se distribuyen alrededor de la zona
+           central/inferior de la pantalla.
+        */
+
+        const startX =
+            window.innerWidth *
+            (
+                0.35 +
+                Math.random() * 0.30
+            );
 
 
-        confetti.style.setProperty(
-            "--rotation",
-            (Math.random() * 1080 - 540) + "deg"
-        );
+        const startY =
+            window.innerHeight *
+            (
+                0.60 +
+                Math.random() * 0.12
+            );
 
 
-        confetti.style.animationDuration =
-            (2.8 + Math.random() * 2) + "s";
+        element.style.left =
+            startX + "px";
 
-
-        confetti.style.animationDelay =
-            (Math.random() * 0.45) + "s";
+        element.style.top =
+            startY + "px";
 
 
         confettiContainer.appendChild(
-            confetti
+            element
         );
 
 
-        setTimeout(
-            () => {
-                confetti.remove();
-            },
-            6000
-        );
+        /*
+           Ángulo de lanzamiento.
+
+           Algunas piezas van a la izquierda,
+           otras al centro y otras a la derecha.
+        */
+
+        const angle =
+            (
+                -155 +
+                Math.random() * 130
+            ) *
+            Math.PI / 180;
+
+
+        /*
+           Cada pieza tiene una velocidad
+           diferente.
+        */
+
+        const speed =
+            450 +
+            Math.random() * 650;
+
+
+        const velocityX =
+            Math.cos(angle) *
+            speed;
+
+
+        const velocityY =
+            Math.sin(angle) *
+            speed;
+
+
+        pieces.push({
+
+            element: element,
+
+            x: startX,
+
+            y: startY,
+
+            vx: velocityX,
+
+            vy: velocityY,
+
+            rotation:
+                Math.random() * 360,
+
+            rotationSpeed:
+                (
+                    Math.random() * 900 -
+                    450
+                ),
+
+            gravity:
+                750 +
+                Math.random() * 350,
+
+            drag:
+                0.985 +
+                Math.random() * 0.01,
+
+            delay:
+                Math.random() * 350,
+
+            startTime: null,
+
+            life:
+                3200 +
+                Math.random() * 1800
+
+        });
 
     }
+
+
+    const animationStart =
+        performance.now();
+
+
+    function animateConfetti(now) {
+
+        let piecesAlive = false;
+
+
+        pieces.forEach(piece => {
+
+            const elapsed =
+                now -
+                animationStart -
+                piece.delay;
+
+
+            /*
+               Todavía no ha salido esta pieza.
+               Esto evita que todo explote
+               exactamente al mismo tiempo.
+            */
+
+            if (elapsed < 0) {
+
+                piecesAlive = true;
+
+                return;
+
+            }
+
+
+            if (piece.startTime === null) {
+
+                piece.startTime = now;
+
+                piece.element.style.opacity =
+                    "1";
+
+            }
+
+
+            const dt =
+                Math.min(
+                    (now - piece.startTime) /
+                    1000,
+                    0.035
+                );
+
+
+            piece.startTime = now;
+
+
+            /*
+               Resistencia del aire
+            */
+
+            piece.vx *= piece.drag;
+
+
+            /*
+               Gravedad
+            */
+
+            piece.vy +=
+                piece.gravity * dt;
+
+
+            /*
+               Posición
+            */
+
+            piece.x +=
+                piece.vx * dt;
+
+            piece.y +=
+                piece.vy * dt;
+
+
+            /*
+               Rotación independiente
+            */
+
+            piece.rotation +=
+                piece.rotationSpeed *
+                dt;
+
+
+            /*
+               Pequeño movimiento lateral
+               para que no parezca mecánico.
+            */
+
+            const flutter =
+                Math.sin(
+                    elapsed * 0.012 +
+                    piece.rotation
+                ) * 5;
+
+
+            piece.element.style.transform =
+                `translate3d(${flutter}px, 0, 0)
+                 rotate(${piece.rotation}deg)`;
+
+
+            piece.element.style.left =
+                piece.x + "px";
+
+            piece.element.style.top =
+                piece.y + "px";
+
+
+            /*
+               Desaparece progresivamente
+               al final.
+            */
+
+            const progress =
+                elapsed /
+                piece.life;
+
+
+            if (progress > 0.72) {
+
+                piece.element.style.opacity =
+                    Math.max(
+                        0,
+                        1 -
+                        (
+                            progress - 0.72
+                        ) / 0.28
+                    );
+
+            }
+
+
+            /*
+               Eliminar cuando termina
+            */
+
+            if (
+                elapsed < piece.life &&
+                piece.y <
+                    window.innerHeight + 100
+            ) {
+
+                piecesAlive = true;
+
+            } else {
+
+                piece.element.remove();
+
+            }
+
+        });
+
+
+        if (piecesAlive) {
+
+            requestAnimationFrame(
+                animateConfetti
+            );
+
+        }
+
+    }
+
+
+    requestAnimationFrame(
+        animateConfetti
+    );
 
 }
 
 
 
-if (countdownConfettiSection) {
+/* =========================================================
+   ACTIVAR AL LLEGAR A CUENTA REGRESIVA
+========================================================= */
+
+if (
+    countdownConfettiSection &&
+    confettiContainer
+) {
 
     const countdownConfettiObserver =
         new IntersectionObserver(
@@ -1218,7 +1487,7 @@ if (countdownConfettiSection) {
 
                         confettiPlayed = true;
 
-                        launchConfetti();
+                        launchWeddingConfetti();
 
                         countdownConfettiObserver.unobserve(
                             countdownConfettiSection
@@ -1231,7 +1500,7 @@ if (countdownConfettiSection) {
             },
 
             {
-                threshold: 0.2
+                threshold: 0.25
             }
 
         );
