@@ -6415,28 +6415,20 @@ textarea {
     }
 }
 /* =========================================================
-   CONFETI - CUENTA REGRESIVA
+   CONFETI
 ========================================================= */
 
-.countdown-section {
-    position: relative;
-    overflow: hidden;
-}
-
-
 #confetti-container {
-    position: absolute;
-
+    position: fixed;
     inset: 0;
 
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 
     pointer-events: none;
+    overflow: hidden;
 
-    z-index: 20;
+    z-index: 99999;
 }
 
 
@@ -6445,77 +6437,45 @@ textarea {
 
     top: -30px;
 
-    width: 9px;
-    height: 15px;
+    width: 10px;
+    height: 16px;
 
-    opacity: 0;
+    opacity: 1;
 
-    border-radius: 2px;
-
-    animation:
-        weddingConfettiFall
-        var(--fall-duration)
-        cubic-bezier(.15, .65, .35, 1)
-        forwards;
-
-    animation-delay:
-        var(--fall-delay);
+    animation: confettiFall 3.8s ease-out forwards;
 }
 
-
-@keyframes weddingConfettiFall {
-
-    0% {
-        opacity: 0;
-
-        transform:
-            translate3d(0, -20px, 0)
-            rotate(0deg);
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-
-        transform:
-            translate3d(
-                var(--drift),
-                115vh,
-                0
-            )
-            rotate(var(--rotation));
-    }
-
-}
-
-
-/* Confeti circular */
 
 .confetti-piece.circle {
-    width: 8px;
-    height: 8px;
+    width: 9px;
+    height: 9px;
 
     border-radius: 50%;
 }
 
 
-/* Confeti fino */
+@keyframes confettiFall {
 
-.confetti-piece.thin {
-    width: 5px;
-    height: 17px;
-}
+    0% {
+        transform:
+            translateY(-30px)
+            translateX(0)
+            rotate(0deg);
 
+        opacity: 1;
+    }
 
-/* Respeta dispositivos con animaciones reducidas */
+    85% {
+        opacity: 1;
+    }
 
-@media (prefers-reduced-motion: reduce) {
+    100% {
+        transform:
+            translateY(110vh)
+            translateX(var(--drift))
+            rotate(var(--rotation));
 
-    .confetti-piece {
-        display: none;
+        opacity: 0;
     }
 
 }
