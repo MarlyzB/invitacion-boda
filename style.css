@@ -6657,7 +6657,138 @@ and (max-height: 740px) {
 
         font-size: .8rem !important;
     }
+/* =========================================================
+   HERO MÓVIL - INDICADOR SIEMPRE VISIBLE
+========================================================= */
 
+@media (max-width: 700px) {
+
+    .hero {
+        position: relative;
+
+        height: 100svh;
+        min-height: 100svh;
+
+        padding:
+            max(28px, env(safe-area-inset-top))
+            20px
+            max(65px, env(safe-area-inset-bottom));
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .hero-content {
+        width: 100%;
+        max-width: 430px;
+    }
+
+
+    /* Parte superior */
+
+    .hero .eyebrow {
+        margin-bottom: 10px;
+    }
+
+
+    /* Anillos */
+
+    .hero .hero-rings {
+        width: 85px !important;
+        margin: 0 auto 8px !important;
+    }
+
+
+    /* Nombres */
+
+    .hero .couple-names {
+        font-size: 4.6rem;
+        line-height: .68;
+    }
+
+
+    .hero .couple-names .ampersand {
+        margin: .06em 0;
+    }
+
+
+    /* Fecha */
+
+    .hero .hero-date {
+        margin-top: 18px !important;
+        font-size: 1rem;
+    }
+
+
+    .hero .hero-place {
+        margin-top: 1px;
+        font-size: .92rem;
+    }
+
+
+    /* Línea dorada */
+
+    .hero .gold-divider {
+        margin: 12px auto;
+    }
+
+
+    /* Mensaje */
+
+    .hero .hero-message {
+        font-size: .95rem !important;
+        line-height: 1.35;
+    }
+
+
+    /* Versículo */
+
+    .hero .hero-verse {
+        margin-top: 10px;
+        font-size: .84rem !important;
+        line-height: 1.3;
+    }
+
+
+    .hero .hero-verse span {
+        margin-top: 2px;
+        font-size: .5rem;
+    }
+
+
+    /* =========================================
+       INDICADOR FIJO EN LA PARTE INFERIOR
+    ========================================= */
+
+    .hero .scroll-indicator {
+        position: absolute;
+
+        left: 50%;
+        bottom:
+            max(10px, env(safe-area-inset-bottom));
+
+        transform: translateX(-50%);
+
+        width: 100%;
+
+        margin: 0;
+
+        font-size: .48rem;
+        letter-spacing: .08rem;
+
+        text-align: center;
+    }
+
+
+    .hero .scroll-indicator div {
+        margin-top: -2px;
+
+        font-size: 1.35rem;
+    }
+
+}
 
     .scroll-indicator {
         margin-top: 12px;
