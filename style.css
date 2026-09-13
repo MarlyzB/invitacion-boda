@@ -6455,3 +6455,212 @@ textarea {
     width: 5px;
     height: 16px;
 }
+/* =========================================================
+   HERO - AJUSTE PARA CELULAR
+   Todo visible en la primera pantalla
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .hero {
+        min-height: 100svh;
+
+        padding:
+            42px 20px
+            28px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    .hero-content {
+        width: 100%;
+        max-width: 430px;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    /* ¡NOS CASAMOS! */
+
+    .hero .eyebrow {
+        margin-bottom: 14px;
+
+        font-size: .62rem;
+
+        letter-spacing: .32rem;
+    }
+
+
+    /* ANILLOS */
+
+    .hero-rings {
+        width: 105px !important;
+
+        max-width: 30vw;
+
+        margin:
+            0 auto 10px !important;
+    }
+
+
+    /* MARLYZ & NICOLAS */
+
+    .hero .couple-names {
+        font-size:
+            clamp(3.8rem, 15vw, 4.8rem);
+
+        line-height: .72;
+    }
+
+
+    .hero .couple-names .ampersand {
+        margin:
+            .08em 0 .05em;
+    }
+
+
+    /* FECHA */
+
+    .hero-date {
+        margin-top: 24px !important;
+
+        font-size: 1rem;
+
+        letter-spacing: .18rem;
+    }
+
+
+    /* LUGAR */
+
+    .hero-place {
+        margin-top: 2px;
+
+        font-size: .92rem;
+    }
+
+
+    /* DIVISOR */
+
+    .gold-divider {
+        margin:
+            16px auto;
+
+        width: 55px;
+    }
+
+
+    /* MENSAJE */
+
+    .hero-message {
+        font-size: 1rem !important;
+
+        line-height: 1.45;
+    }
+
+
+    /* VERSÍCULO */
+
+    .hero-verse {
+        margin:
+            14px auto 0;
+
+        font-size: .88rem !important;
+
+        line-height: 1.4;
+    }
+
+
+    .hero-verse span {
+        margin-top: 4px;
+
+        font-size: .52rem;
+    }
+
+
+    /* DESCUBRE NUESTRA INVITACIÓN */
+
+    .scroll-indicator {
+        margin-top: 20px;
+
+        font-size: .52rem;
+
+        letter-spacing: .09rem;
+    }
+
+
+    .scroll-indicator div {
+        margin-top: 1px;
+
+        font-size: 1.5rem;
+    }
+
+}
+/* =========================================================
+   CELULARES CON POCA ALTURA
+========================================================= */
+
+@media
+(max-width: 700px)
+and (max-height: 740px) {
+
+    .hero {
+        padding:
+            28px 18px
+            18px;
+    }
+
+
+    .hero .eyebrow {
+        margin-bottom: 8px;
+    }
+
+
+    .hero-rings {
+        width: 82px !important;
+
+        margin-bottom: 7px !important;
+    }
+
+
+    .hero .couple-names {
+        font-size:
+            clamp(3.3rem, 14vw, 4.1rem);
+    }
+
+
+    .hero-date {
+        margin-top: 16px !important;
+    }
+
+
+    .gold-divider {
+        margin:
+            11px auto;
+    }
+
+
+    .hero-message {
+        font-size: .9rem !important;
+    }
+
+
+    .hero-verse {
+        margin-top: 9px;
+
+        font-size: .8rem !important;
+    }
+
+
+    .scroll-indicator {
+        margin-top: 12px;
+    }
+
+}
